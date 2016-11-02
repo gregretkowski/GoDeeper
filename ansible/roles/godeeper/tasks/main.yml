@@ -1,0 +1,5 @@
+---
+- include: roles/godeeper/tasks/python2.yml
+- include: roles/godeeper/tasks/python3.yml
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 16
+

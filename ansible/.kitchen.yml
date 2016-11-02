@@ -1,0 +1,39 @@
+driver:
+  name: docker
+  use_sudo: false
+provisioner:
+  name: ansible_playbook
+  roles_path: roles
+  require_ansible_repo: true
+  ansible_verbose: true
+  ansible_version: latest
+platforms:
+  - name: ubuntu-14-04
+    driver_plugin: docker
+    driver_config:
+      image: ubuntu:trusty
+      platform: ubuntu
+      privileged: false  
+  - name: ubuntu-16-04
+    driver_plugin: docker
+    driver_config:
+      image: ubuntu:xenial
+      platform: ubuntu
+      privileged: true
+      run_command: /sbin/init
+      volume:
+        - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+      provision_command:
+        - "systemctl enable ssh.service"
+        - "rm -rf /lib/systemd/system/systemd*udev"
+        - "rm -rf /lib/systemd/system/getty.target"
+suites:
+  - name: godeeper
+    provisioner:
+      playbook: godeeper.yml
+      hosts: godeeper
+    excludes: 
+      # Still working on this one.
+      - ubuntu-14-04
+
+

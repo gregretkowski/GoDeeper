@@ -1,0 +1,30 @@
+---
+- package: name={{item}} state=installed
+  with_items:
+    - python3-scipy
+    - python3-numpy
+    - python3-pip
+
+# Pygame install on ubuntu3
+# http://askubuntu.com/a/825014
+
+- package: name=ipython3-notebook state=installed
+- package: name=spyder3 state=installed
+- package: name=virtualenv state=installed
+
+# tensorflow install for python 3
+# http://askubuntu.com/a/772913
+
+# Note - need to upgrade pip before installing jupyter for python 3
+# sudo pip3 install --upgrade pip
+- name: upgrade pip3
+  shell: pip3 install --upgrade pip && touch /root/.pip3_upgraded
+  args:
+    creates: /root/.pip3_upgraded
+- pip: name=jupyter state=present executable=pip3
+- pip: name=ipykernel state=present executable=pip3
+- pip: name=scikit-learn state=present executable=pip3
+- pip: name=scipy state=present executable=pip3
+- pip: name=keras state=present executable=pip3
+- pip: name=pandas state=present executable=pip3
+

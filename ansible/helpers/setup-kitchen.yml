@@ -1,0 +1,27 @@
+---
+# Sets up kitchen, docker, ansible
+- hosts: all
+  become: true
+  tasks:
+    - package: name=epel-release state=installed
+      when: ansible_os_family == "RedHat"
+    - package: name=ansible state=installed
+    - local_action: command whoami
+      become: false
+      register: my_username
+    - set_fact: docker_pkg="docker"
+      when: ansible_os_family == "RedHat"
+    - set_fact: docker_pkg="docker.io"
+      when: ansible_os_family == "Debian"
+    - package: name="{{docker_pkg}}" state=installed
+    - group: name=docker state=present
+    - user: >
+        name="{{my_username.stdout}}"
+        groups=docker
+        append=yes
+    - service: name=docker state=started enabled=yes
+    - package: name=ruby state=installed
+    - gem: name=test-kitchen state=present user_install=no version=1.8.0
+    - gem: name=kitchen-docker state=present user_install=no version=2.4.0
+    - gem: name=kitchen-ansible state=present user_install=no version=0.42.3
+
