@@ -1,0 +1,6 @@
+---
+- name: install build-essential package
+  package: name=build-essential state=installed
+- name: install git package
+  package: name=git state=installed
+

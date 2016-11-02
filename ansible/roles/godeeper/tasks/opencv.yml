@@ -1,0 +1,80 @@
+---
+# http://rodrigoberriel.com/2014/10/installing-opencv-3-0-0-on-ubuntu-14-04/
+- name: install opencv prereqs
+  package: name={{item}} state=installed
+  with_items:
+    - libopencv-dev
+    - cmake
+    - libgtk2.0-dev
+    - pkg-config
+    - python-dev
+    - python-numpy
+    - libdc1394-22
+    - libdc1394-22-dev
+    - libjpeg-dev
+    - libpng12-dev
+    - libtiff4-dev
+    - libjasper-dev
+    - libavcodec-dev
+    - libavformat-dev
+    - libswscale-dev
+    - libxine-dev
+    - libgstreamer0.10-dev
+    - libgstreamer-plugins-base0.10-dev
+    - libv4l-dev
+    - libtbb-dev
+    - libqt4-dev
+#    - libfaac-dev
+    - libmp3lame-dev
+    - libopencore-amrnb-dev
+    - libopencore-amrwb-dev
+    - libtheora-dev
+    - libvorbis-dev
+    - libxvidcore-dev
+    - x264
+    - v4l-utils
+    - unzip
+- name: download opencv
+  get_url: >
+    url=https://github.com/Itseez/opencv/archive/3.0.0-alpha.zip
+    dest=/root/godeeper/opencv-3.0.0-alpha.zip
+- name: unpack opencv
+  shell: unzip opencv-3.0.0-alpha.zip
+  args:
+    chdir: /root/godeeper
+    creates: /root/godeeper/opencv-3.0.0-alpha
+- name: make build dir
+  file:
+    dest=/root/godeeper/opencv-3.0.0-alpha/build
+    state=directory
+- name: cmake opencv
+  # this yaml shouldnt have line-breaks but does (?)
+  shell: >
+    cmake -D CMAKE_BUILD_TYPE=RELEASE \
+     -D CMAKE_INSTALL_PREFIX=/usr/local -D WITH_TBB=ON \
+     -D WITH_V4L=ON -D   WITH_QT=ON -D WITH_OPENGL=ON \
+     -D WITH_FFMPEG=OFF /root/godeeper/opencv-3.0.0-alpha \
+     && touch .cmake-run
+  args:
+    chdir: /root/godeeper/opencv-3.0.0-alpha/build
+    creates: /root/godeeper/opencv-3.0.0-alpha/.cmake-run
+- name: make opencv
+  shell: make && touch .make-run
+  args:
+    chdir: /root/godeeper/opencv-3.0.0-alpha
+    creates: /root/godeeper/opencv-3.0.0-alpha/.make-run
+- name: make install opencv
+  shell: make install && touch .make-install-run
+  args:
+    chdir: /root/godeeper/opencv-3.0.0-alpha/build
+    creates: /root/godeeper/opencv-3.0.0-alpha/.make-install-run
+- name: setup ldconfig
+  file: >
+    dest=/etc/ld.so.conf.d/opencv.conf
+    content="/usr/local/lib\n"
+    mode=0644
+  register: opencv_ldconf
+- name: run ldconfig
+  shell: ldconfig
+  when: opencv_ldconf.changed
+

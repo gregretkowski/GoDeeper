@@ -1,4 +1,16 @@
 ---
+- file: >
+    dest=/root/godeeper
+    mode=0755
+    state=directory
+- file: >
+    dest=/opt
+    mode=0755
+    state=directory
+- include: roles/godeeper/tasks/build-tools.yml
+- include: roles/godeeper/tasks/torch.yml
+- include: roles/godeeper/tasks/opencv.yml
+- include: roles/godeeper/tasks/spark.yml
 - include: roles/godeeper/tasks/python2.yml
 - include: roles/godeeper/tasks/python3.yml
   when: ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int >= 16

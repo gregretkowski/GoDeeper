@@ -32,8 +32,8 @@ suites:
     provisioner:
       playbook: godeeper.yml
       hosts: godeeper
-    excludes: 
+    excludes: []
       # Still working on this one.
-      - ubuntu-14-04
+      #- ubuntu-14-04
 
 

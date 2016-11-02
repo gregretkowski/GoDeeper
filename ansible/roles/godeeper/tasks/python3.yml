@@ -15,16 +15,5 @@
 # tensorflow install for python 3
 # http://askubuntu.com/a/772913
 
-# Note - need to upgrade pip before installing jupyter for python 3
-# sudo pip3 install --upgrade pip
-- name: upgrade pip3
-  shell: pip3 install --upgrade pip && touch /root/.pip3_upgraded
-  args:
-    creates: /root/.pip3_upgraded
-- pip: name=jupyter state=present executable=pip3
-- pip: name=ipykernel state=present executable=pip3
-- pip: name=scikit-learn state=present executable=pip3
-- pip: name=scipy state=present executable=pip3
-- pip: name=keras state=present executable=pip3
-- pip: name=pandas state=present executable=pip3
+- include: roles/godeeper/tasks/common_pips.yml pipbin=pip3
 

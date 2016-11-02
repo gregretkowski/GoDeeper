@@ -1,3 +1,5 @@
 ---
 - package: name=python-pip state=installed
 
+- include: roles/godeeper/tasks/common_pips.yml pipbin=pip
+

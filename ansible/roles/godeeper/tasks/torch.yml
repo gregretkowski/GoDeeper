@@ -1,0 +1,18 @@
+---
+- name: clone torch
+  git: >
+    repo=https://github.com/torch/distro.git
+    recursive=true
+    dest=/opt/torch
+    update=no
+- name: torch install-deps
+  shell: bash install-deps && touch .deps-installed
+  args:
+    chdir: /opt/torch
+    creates: /opt/torch/.deps-installed
+- name: torch install.sh
+  shell: ./install.sh && touch .install-ran
+  args:
+    chdir: /opt/torch
+    creates: /opt/torch/.install-ran
+
