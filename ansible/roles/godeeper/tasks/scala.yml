@@ -1,0 +1,5 @@
+#- name: install scala ppa
+#  apt_repository: repo='ppa:gregprice/scala'
+- name: install scala package
+  package: name=scala state=installed
+

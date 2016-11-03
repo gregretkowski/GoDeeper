@@ -1,0 +1,5 @@
+- name: install julia ppa
+  apt_repository: repo='ppa:staticfloat/juliareleases'
+- name: install julia package
+  package: name=julia state=installed
+
